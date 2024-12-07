@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Suhu Surabaya</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #0066cc;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #444;
+            display: block;
+            margin: 15px 0 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .value-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #0077cc;
+        }
+
+        .original-value {
+            font-size: 1em;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .change-indicator {
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .change-positive {
+            color: green;
+        }
+
+        .change-negative {
+            color: red;
+        }
+
+        #hasil {
+            font-size: 1.3em;
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #e0f7fa;
+            border-radius: 5px;
+        }
+
+        #suhuResult {
+            font-size: 1.5em;
+            color: #f44336;
+        }
+
+        .info-text {
+            font-size: 1em;
+            color: #666;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #luasSelisih, #originalTemp, #currentTemp {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .selisih-positif {
+            color: #ff0000;
+        }
+
+        .selisih-negatif {
+            color: #00aa00;
+        }
+
+        .reset-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background-color: #0055aa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kalkulator Suhu Kota Surabaya</h1>
+
+    <div class="container">
+        <div id="hasil">
+            <span id="suhuValue">Rata-Rata Suhu Tahun 2024 di Surabaya: </span><span id="suhuResult">39.87</span> °C
+        </div>
+        <div id="originalTemp">Suhu Awal: 39.84 °C</div>
+        
+        <label for="air">Luas Perairan (ha):
+            <div class="value-container">
+                <span id="airValue" class="value">3776</span>
+                <span id="airOriginalValue" class="original-value">(Awal: 3776)</span>
+                <span id="airChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="air" min="0" max="33587" value="3776" oninput="updateValues()">
+
+        <label for="pepohonan">Luas Pepohonan (ha):
+            <div class="value-container">
+                <span id="pepohonanValue" class="value">1412</span>
+                <span id="pepohonanOriginalValue" class="original-value">(Awal: 1412)</span>
+                <span id="pepohonanChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="pepohonan" min="0" max="33587" value="1412" oninput="updateValues()">
+
+        <label for="rumput">Luas Rumput (ha):
+            <div class="value-container">
+                <span id="rumputValue" class="value">302</span>
+                <span id="rumputOriginalValue" class="original-value">(Awal: 302)</span>
+                <span id="rumputChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="rumput" min="0" max="33587" value="302" oninput="updateValues()">
+
+        <label for="vegetasi_tergenang">Luas Vegetasi Tergenang (ha):
+            <div class="value-container">
+                <span id="vegetasi_tergenangValue" class="value">1688</span>
+                <span id="vegetasi_tergenangOriginalValue" class="original-value">(Awal: 1688)</span>
+                <span id="vegetasi_tergenangChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="vegetasi_tergenang" min="0" max="33587" value="1688" oninput="updateValues()">
+
+        <label for="tanaman">Luas Sawah (ha):
+            <div class="value-container">
+                <span id="tanamanValue" class="value">978</span>
+                <span id="tanamanOriginalValue" class="original-value">(Awal: 978)</span>
+                <span id="tanamanChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="tanaman" min="0" max="33587" value="978" oninput="updateValues()">
+
+        <label for="semak">Luas Semak (ha):
+            <div class="value-container">
+                <span id="semakValue" class="value">479</span>
+                <span id="semakOriginalValue" class="original-value">(Awal: 479)</span>
+                <span id="semakChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="semak" min="0" max="33587" value="479" oninput="updateValues()">
+
+        <label for="bangunan">Luas Bangunan (ha):
+            <div class="value-container">
+                <span id="bangunanValue" class="value">24865</span>
+                <span id="bangunanOriginalValue" class="original-value">(Awal: 24865)</span>
+                <span id="bangunanChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="bangunan" min="0" max="33587" value="24865" oninput="updateValues()">
+
+        <label for="tanah_telanjang">Luas Tanah Terbuka (ha):
+            <div class="value-container">
+                <span id="tanah_telanjangValue" class="value">87</span>
+                <span id="tanah_telanjangOriginalValue" class="original-value">(Awal: 87)</span>
+                <span id="tanah_telanjangChangeIndicator" class="change-indicator"></span>
+            </div>
+        </label>
+        <input type="number" id="tanah_telanjang" min="0" max="33587" value="87" oninput="updateValues()">
+
+        <div id="luasSelisih" class=""></div>
+        <button class="reset-btn" onclick="resetToOriginalValues()">Reset ke Nilai Awal</button>
+        
+        <div class="info-text">
+            Pastikan total luas tutupan lahan adalah 33.587 ha untuk perhitungan yang tepat.
+        </div>
+    </div>
+
+    <script>
+        // Original values
+        const ORIGINAL_VALUES = {
+            air: 3776,
+            pepohonan: 1412,
+            rumput: 302,
+            vegetasi_tergenang: 1688,
+            tanaman: 978,
+            semak: 479,
+            bangunan: 24865,
+            tanah_telanjang: 87
+        };
+
+        const ORIGINAL_TEMPERATURE = 39.84;
+        const TOTAL_AREA = 33587;
+
+        function updateValues() {
+            const inputs = ['air', 'pepohonan', 'rumput', 'vegetasi_tergenang', 'tanaman', 'semak', 'bangunan', 'tanah_telanjang'];
+
+            inputs.forEach(input => {
+                const currentValue = parseFloat(document.getElementById(input).value);
+                const originalValue = ORIGINAL_VALUES[input];
+                const valueEl = document.getElementById(`${input}Value`);
+                const changeIndicator = document.getElementById(`${input}ChangeIndicator`);
+
+                // Update current value display
+                valueEl.innerText = currentValue;
+
+                // Show change indicator
+                if (currentValue > originalValue) {
+                    changeIndicator.innerText = `+${(currentValue - originalValue).toFixed(2)}`;
+                    changeIndicator.className = 'change-indicator change-positive';
+                } else if (currentValue < originalValue) {
+                    changeIndicator.innerText = `-${(originalValue - currentValue).toFixed(2)}`;
+                    changeIndicator.className = 'change-indicator change-negative';
+                } else {
+                    changeIndicator.innerText = '';
+                    changeIndicator.className = 'change-indicator';
+                }
+            });
+
+            // Calculate total area
+            const totalLuas = inputs.reduce((sum, input) => sum + parseFloat(document.getElementById(input).value), 0);
+
+            // Luas selisih
+            const luasSelisih = document.getElementById('luasSelisih');
+            const selisih = totalLuas - TOTAL_AREA;
+
+            if (selisih === 0) {
+                luasSelisih.innerHTML = '';
+            } else if (selisih > 0) {
+                luasSelisih.innerHTML = `<span class="selisih-positif">Berlebih: ${selisih.toFixed(2)} ha</span>`;
+            } else {
+                luasSelisih.innerHTML = `<span class="selisih-negatif">Kurang: ${Math.abs(selisih).toFixed(2)} ha</span>`;
+            }
+
+            // Temperature calculation
+            if (totalLuas === TOTAL_AREA) {
+                // Menghitung suhu berdasarkan luas tutupan lahan
+                const suhuAir = 34.48876489545754; // Suhu rata-rata untuk perairan
+                const suhuPepohonan = 35.78577381977134; // Suhu rata-rata untuk pepohonan
+                const suhuRumput = 38.50071550456923; // Suhu rata-rata untuk rumput
+                const suhuVegetasiTergenang = 34.68452989603415; // Suhu rata-rata untuk vegetasi tergenang
+                const suhuTanaman = 37.82579699627996; // Suhu rata-rata untuk tanaman
+                const suhuSemak = 39.16714729054214; // Suhu rata-rata untuk semak
+                const suhuBangunan = 41.33512585318089; // Suhu rata-rata untuk bangunan
+                const suhuTanahTelanjang = 41.32610931534923; // Suhu rata-rata untuk tanah telanjang
+
+                const air = parseFloat(document.getElementById('air').value);
+                const pepohonan = parseFloat(document.getElementById('pepohonan').value);
+                const rumput = parseFloat(document.getElementById('rumput').value);
+                const vegetasi_tergenang = parseFloat(document.getElementById('vegetasi_tergenang').value);
+                const tanaman = parseFloat(document.getElementById('tanaman').value);
+                const semak = parseFloat(document.getElementById('semak').value);
+                const bangunan = parseFloat(document.getElementById('bangunan').value);
+                const tanah_telanjang = parseFloat(document.getElementById('tanah_telanjang').value);
+
+                const totalSuhu = (air * suhuAir + pepohonan * suhuPepohonan + rumput * suhuRumput +
+                                   vegetasi_tergenang * suhuVegetasiTergenang + tanaman * suhuTanaman +
+                                   semak * suhuSemak + bangunan * suhuBangunan + tanah_telanjang * suhuTanahTelanjang) / TOTAL_AREA;
+
+                document.getElementById('hasil').innerHTML = `Rata-Rata Suhu: <span id="suhuResult">${totalSuhu.toFixed(2)}</span> °C`;
+            } else {
+                document.getElementById('hasil').innerHTML = "Total luas tutupan lahan harus 33.587 ha.";
+            }
+        }
+
+        function resetToOriginalValues() {
+            // Reset input values to original
+            Object.entries(ORIGINAL_VALUES).forEach(([input, value]) => {
+                document.getElementById(input).value = value;
+            });
+
+            // Trigger update to recalculate everything
+            updateValues();
+        }
+
+        // Initial calculation on page load
+        updateValues();
+    </script>
+
+</body>
+</html>
